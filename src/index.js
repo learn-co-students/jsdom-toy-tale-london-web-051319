@@ -61,6 +61,7 @@ function addToyDiv(toy) {
   img.className = "toy-avatar"
   p.textContent = `${toy.likes} Likes`
   button.className = "like-btn"
+  button.textContent = 'Like <3'
   button.onclick = function(e) {addLike(e.target.parentElement)}
   div.append(h2,img,p,button)
   collection.appendChild(div)
