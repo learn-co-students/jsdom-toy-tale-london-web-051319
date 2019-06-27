@@ -16,6 +16,7 @@ addBtn.addEventListener('click', () => {
 })
 
 
+// PAGE RENDER
 document.addEventListener('DOMContentLoaded', function(e) {
    init();
 });
@@ -30,6 +31,7 @@ let init = () => {
 
 let display = (jsonData) => {
    const container = document.querySelector('#toy-collection');
+   container.innerHTML = '';
    for(i = 0; i < jsonData.length; i++) {
       let newCard = document.createElement('div');
       newCard.className = 'card';
@@ -42,16 +44,65 @@ let display = (jsonData) => {
       newLikes.innerHTML = jsonData[i].likes;
       let newButton = document.createElement('button');
       newButton.innerText = 'Like!';
-      newButton.addEventListener('click', function(e) {
-         like(jsonData[i]);
-      });
+      newButton.id = jsonData[i].id;
+      newButton.value = jsonData[i].likes;
+      newButton.addEventListener('click', like); // put the function in second without brackets!!!
       newCard.append(newHeader, newImg, newLikes, newButton);
       container.append(newCard);
    }
 };
 
-let like = (object) => {
-   debugger
-};
+let like = (event) => {
+   console.log(event)
+   let toyId = event.target.id;
+   let value = parseInt(event.target.value);
+   let newValue = value + 1;
+
+      fetch(`${BASE_URL}/${toyId}`, {
+         method: "PATCH",
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({likes: `${newValue}`}),  //{"likes": newValue}
+      })
+      .then(data => data.json())
+      .then(function(e) {
+         init();
+      });
+      // .then(console.log);
+}
 
 // POST SECTION
+
+let addNewToy = (name, image) => {
+
+   let data = {
+      name: name.value,
+      image: image.value,
+      likes: 0
+   }
+
+   fetch(BASE_URL, {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data),
+   })
+   .then(toy => toy.json())
+   .catch(error => console.log(error))
+   .then(function(e) {
+      init();
+      toyForm.style.display = 'none';
+   });
+}
+
+const newToyForm = document.querySelector('form.add-toy-form');
+const name = newToyForm.querySelector('#toy-form-name')
+const image = newToyForm.querySelector('#toy-form-img')
+
+newToyForm.addEventListener('submit', function(e) {
+   e.preventDefault(); // this stops the addition on refresh
+   addNewToy(name, image);
+})
+// newToyForm.onsubmit = addNewToy(name, image);
