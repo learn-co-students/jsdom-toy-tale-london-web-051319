@@ -25,11 +25,11 @@ body {
   text-align: center;
   border: grey solid 1px;
   padding: 1rem;
-  width: 15rem;
-  height: 25rem;
+  width: 20rem;
+  height: 43rem;
   display: inline-grid;
   margin: 1rem 2rem;
-  box-shadow: 3px 4px #e04b52
+  box-shadow: 3px 4px #999393
 }
 
 .toy-avatar {
@@ -56,6 +56,10 @@ button:hover {
   color: #e04b52;
 }
 
+.hidden {
+  display: none;
+}
+
 .container {
   padding: 1rem;
   width: stretch;
@@ -64,12 +68,20 @@ button:hover {
   background: #515DA2;
   opacity: .8;
 }
+.like-button {
+  font-size: 25px;
+  margin: 0 125px 0 125px;
+  width: auto;
+}
+.like-button:hover {
+  cursor: pointer;
+}
 
 .add-toy-form {
   width: 80%
 }
 
-.submit {
+/* .submit {
   position: relative;
   background-color: #e04b52;
   border-radius: 5px;
@@ -80,7 +92,7 @@ button:hover {
   justify-self: center;
   font-family: monospace;
   margin: 3px;
-}
+} */
 
 .submit:hover {
   background-color: whitesmoke;
