@@ -58,7 +58,8 @@ function addElementsToCard (card) {
   img.className = 'toy-avatar'
   p = document.createElement('p')
   button = document.createElement('button')
-  button.addEventListener('click', addLike)
+  button.className = 'like-btn'
+  button.addEventListener('click', currentLikes)
   card.append(h2, img, p, button)
 }
 
@@ -116,17 +117,24 @@ function addToyToDB (toy) {
 
 // conditional increase to toy's like count - event listener on button
 
-function currentLikes (id) {
-  currentLikes = document.getElementById(id)
-  likes = currentLikes.parentNode.childNodes[2].innerText
-  return likes
+// function currentLikes (id) {
+//   currentLikes = document.getElementById(id)
+//   likes = currentLikes.parentNode.childNodes[2].innerText
+//   return likes
+// }
+
+function currentLikes (event) {
+  let id = event.target.id
+  return fetch(`http://localhost:3000/toys/${id}`)
+    .then(response => response.json())
+    .then(toy => toy.likes)
+    .then(likes => addLike(likes, id))
 }
 
-function addLike (event) {
-  let newNumber = parseInt((currentLikes(event.target.id)))
+function addLike (likes, id) {
+  let newNumber = likes
   newNumber += 1
-  debugger
-  return fetch(`http://localhost:3000/toys/${event.target.id}`, {
+  return fetch(`http://localhost:3000/toys/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
