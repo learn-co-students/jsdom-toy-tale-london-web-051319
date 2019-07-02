@@ -2,8 +2,6 @@ const addBtn = document.querySelector('#new-toy-btn')
 const toyForm = document.querySelector('.container')
 let addToy = false
 
-// YOUR CODE HERE
-
 addBtn.addEventListener('click', () => {
   // hide & seek with the form
   addToy = !addToy
@@ -15,88 +13,95 @@ addBtn.addEventListener('click', () => {
   }
 })
 
-function showingToy(toy) {
-  const toyList = document.querySelector("#toy-collection");
-  const div = makeToyCard(toy);
-  div.id = toy.id;
-  toyList.appendChild(div);
+// YOUR CODE HERE
+const toyCollection = document.querySelector('#toy-collection')
+
+const baseAPIURL = "http://localhost:3000"
+const toysURL = `${baseAPIURL}/toys`
+
+// ------- fetches toys from the api -----------//
+fetch(toysURL)
+  .then(response => response.json())
+  .then(data => {
+    data.forEach(toyData => {
+      createToyCard(toyData)
+    })
+  })
+
+  // ------- Creates each individual toy card -----------//
+const createToyCard = toyData => {
+  // <div class="card">
+  const cardDiv = document.createElement('div')
+  cardDiv.classList.add('card')
+  // h2 tag with the toy's name
+  const cardHeader = document.createElement('h2') // create
+  cardHeader.innerHTML = toyData.name // change
+  cardDiv.appendChild(cardHeader) // append
+  // image tag with the src of the toy's image attribute - needs a class name of "toy-avatar"
+  const cardImg = document.createElement('img')
+  cardImg.src = toyData.image
+  cardImg.classList.add('toy-avatar')
+  cardDiv.appendChild(cardImg)
+  // p tag with how many likes that toy has
+  const cardP = document.createElement('p') // create
+  cardP.innerHTML = `Likes: ${toyData.likes}` // change
+  cardDiv.appendChild(cardP) // append
+  // button tag with an class of "like-btn"
+  const cardButton = document.createElement('button') // create
+  cardButton.classList.add('like-btn')
+  cardButton.innerHTML = `Like <3` // change
+  cardDiv.appendChild(cardButton) // append
+  toyCollection.appendChild(cardDiv)
+
+
+   setUpLikeFunctionality(toyData, cardButton, cardP)
 }
 
-function makeToyCard(toy) {
-  const div = document.createElement("div");
-  div.className = "card";
-
-  const h2 = document.createElement("h2");
-  h2.textContent = toy.name;
-
-  const img = document.createElement("img");
-  img.className = "toy-avatar";
-  img.src = toy.image;
-
-  const p = document.createElement("p");
-  p.textContent = toy.likes;
-
-  const button = document.createElement("button");
-  button.className = "like-btn"
-  button.innerHTML = " <3 ";
-
-  div.appendChild(h2);
-  div.appendChild(img);
-  div.appendChild(p);
-  div.appendChild(button);
-
-  return div;  
+//------- sets the event listener on the like button ----------//
+const setUpLikeFunctionality = (toyData, likeButton, p) => {
+  likeButton.addEventListener('click', (event) => {
+    toyData.likes++;
+    updateToyInBackend(toyData)
+      .then(updatedToy => {
+        toyData = updatedToy
+        p.innerText = `Likes: ${toyData.likes}`
+      })
+  })
 }
 
-function showToys(toyArray) {
-  toyArray.map(toy => {
-    showingToy(toy);
-  });
-}
-
-function getToys() {
-  fetch("http://localhost:3000/toys")
-    .then(toysData => toysData.json())
-    .then( toysArray => showToys( toysArray));
-}
-
-function init() {
-  getToys();
-  toyLike();
-}
-
-const form = document.querySelector("form");
-
-form.addEventListener("submit", event => handleSubmission(event));
-
-function handleSubmission(event) {
-  event.preventDefault();
-  const [toyNameNode, imgNode] = event.target;
-  const toyObj = {
-    name: toyNameNode.value,
-    image: imgNode.value
-  };
-
-  createToy(toyObj).then(addToy);
-}
-
-function  createToy(toy) {
-  return fetch("http://localhost:3000/toys", {
-    method: "POST", 
-    body: JSON.stringify(toy),
+// -------- Sends a patch request to update the api ----------//
+const updateToyInBackend = toy => {
+  return fetch(`${toysURL}/${toy.id}`, {
+    method: 'PATCH',
     headers: {
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(toy)
+  })
+    .then(res => res.json())
+}
+
+// --------- adds a new toy ---------------//
+const addANewToy = toyData => {
+  // When a user clicks on the add new toy button - a POST request is sent to http://localhost:3000/toys and the new toy is added to Andy's Toy Collection.
+  // The toy should conditionally render to the page.
+  // An example toy to add:
+  fetch(toysURL, {
+    method: 'POST',
+    body: JSON.stringify(toyData),
+    headers: {
+      'Content-Type': 'application/json'
     }
-  }).then(toy => toy.json());
+  })
+    .then(res => res.json())
+    .then(data => createToyCard(data))
 }
-
-
-
-function toyLike() { 
-
- 
-  
-}
-
-init();
-// OR HERE! 
+// 
+// finds what has been entered into the form
+const newtoyname = document.querySelector('#newtoyname')
+toyForm.addEventListener('submit', event => {
+  event.preventDefault()
+  const name = newtoyname.value
+  const image = event.target.elements.image.value
+  addANewToy({ name, image, likes: 0 })
+})
