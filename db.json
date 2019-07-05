@@ -4,13 +4,13 @@
       "id": 1,
       "name": "Woody",
       "image": "http://www.pngmart.com/files/3/Toy-Story-Woody-PNG-Photos.png",
-      "likes": "9"
+      "likes": 32
     },
     {
       "id": 2,
       "name": "Buzz Lightyear",
       "image": "http://www.pngmart.com/files/6/Buzz-Lightyear-PNG-Transparent-Picture.png",
-      "likes": "9"
+      "likes": 17
     },
     {
       "id": 3,
@@ -47,12 +47,6 @@
       "name": "Little Green Men",
       "image": "http://www.pngmart.com/files/3/Toy-Story-Alien-PNG-File.png",
       "likes": "2"
-    },
-    {
-      "name": "Forky",
-      "image": "https://www.thetoyshop.com/medias/539068-Primary-1200Wx1200H?context=bWFzdGVyfGltYWdlc3wxNTE1NjZ8aW1hZ2UvcG5nfGltYWdlcy9oYTUvaDMyLzkxNzAyMzM1MjQyNTQucG5nfDgxODQ3YWIzMGM0NjJkZDNjOWE5OWFkNzllNTc5NWIyNmY0NWJmMDFmNWNiMjJjMzg4NzlmNWFmNDc5ZDU0MWI",
-      "likes": "3",
-      "id": 9
     }
   ]
 }
